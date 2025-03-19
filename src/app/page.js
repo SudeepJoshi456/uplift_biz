@@ -5,39 +5,43 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   const [results, setResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); 
   const [location, setLocation] = useState("");
   const [locationError, setLocationError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch businesses from Yelp API based on user input
-  const fetchBusinesses = async (searchLocation) => {
-    if (!searchLocation) {
-      setLocationError("Please enter a valid location.");
-      return;
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation(`${latitude},${longitude}`);
+        },
+        (error) => {
+          setLocationError("Location access denied. Enter location manually.");
+        }
+      );
+    } else {
+      setLocationError("Geolocation not supported.");
     }
+  }, []);
+
+  const fetchBusinesses = async () => {
+    if (!location && !searchQuery) return;
 
     setLoading(true);
     setResults([]);
 
     try {
-      const response = await fetch(`/api/yelp?location=${encodeURIComponent(searchLocation)}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
+      const response = await fetch(`/api/yelp?location=${location}&term=${searchQuery}`);
+      if (!response.ok) throw new Error("Failed to fetch data");
+      
       const data = await response.json();
-
-      if (data.businesses) {
-        setResults(data.businesses);
-      } else {
-        setResults([]);
-      }
+      setResults(data.businesses || []);
     } catch (error) {
       console.error("Error fetching Yelp data:", error);
       setResults([]);
     }
-
     setLoading(false);
   };
 
@@ -52,46 +56,73 @@ export default function Home() {
           Discover and support businesses in your community.
         </p>
 
-        {/* Input field for manual location entry */}
-        <div className="mt-4">
+        {locationError && <p className="text-red-500 mt-4">{locationError}</p>}
+
+        <div className="mt-4 flex gap-2">
           <input
             type="text"
-            placeholder="Enter ZIP code or City, State"
-            className="border text-black rounded p-2"
-            onChange={(e) => setLocation(e.target.value)}
-            value={location}
+            placeholder="Search for restaurants, shops..."
+            className="border text-black rounded p-2 w-64"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
           />
           <button
-            className="ml-2 bg-blue-500 text-white p-2 rounded"
-            onClick={() => fetchBusinesses(location)}
+            className="bg-blue-500 text-white p-2 rounded"
+            onClick={fetchBusinesses}
           >
             Search
           </button>
         </div>
-
-        {/* Show error message if location is missing */}
-        {locationError && <p className="text-red-500 mt-4">{locationError}</p>}
 
         {/* Results Section */}
         <div className="mt-8 w-full max-w-lg">
           {loading ? (
             <p className="text-gray-500">Loading results...</p>
           ) : results.length > 0 ? (
-            <ul className="bg-gray-100 rounded-md p-4 shadow-md">
+              <ul className="bg-gray-100 rounded-md p-4 shadow-md">
               {results.map((biz) => (
-                <li key={biz.id} className="p-2 border-b border-gray-300 last:border-none">
-                  <p className="text-lg font-semibold text-googleBlue">{biz.name}</p>
-                  <p className="text-sm text-gray-600">
-                    {biz.location.address1}, {biz.location.city}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    ⭐ {biz.rating} ({biz.review_count} reviews)
-                  </p>
+                <li key={biz.id} className="p-4 border-b border-gray-300 last:border-none flex gap-4">
+                  {/* Cover Image */}
+                  {biz.image_url && (
+                    <img
+                      src={biz.image_url}
+                      alt={biz.name}
+                      className="w-20 h-20 object-cover rounded-md"
+                    />
+                  )}
+
+                  {/* Business Info */}
+                  <div>
+                    <p className="text-lg font-semibold text-googleBlue">{biz.name}</p>
+                    <p className="text-sm text-gray-600">{biz.location.address1}, {biz.location.city}</p>
+                    <p className="text-sm text-gray-500">⭐ {biz.rating} ({biz.review_count} reviews)</p>
+
+                    {/* Get Directions Button */}
+                    <a
+                      href={`https://www.google.com/maps/dir/${location}/${encodeURIComponent(
+                        biz.location.address1 + " " + biz.location.city
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block bg-green-500 text-white px-3 py-1 rounded text-sm"
+                    >
+                      Get Directions
+                    </a>
+                  </div>
                 </li>
               ))}
             </ul>
+            // <ul className="bg-gray-100 rounded-md p-4 shadow-md">
+            //   {results.map((biz) => (
+            //     <li key={biz.id} className="p-2 border-b border-gray-300 last:border-none">
+            //       <p className="text-lg font-semibold text-googleBlue">{biz.name}</p>
+            //       <p className="text-sm text-gray-600">{biz.location.address1}, {biz.location.city}</p>
+            //       <p className="text-sm text-gray-500">⭐ {biz.rating} ({biz.review_count} reviews)</p>
+            //     </li>
+            //   ))}
+            // </ul>
           ) : (
-            <p className="text-gray-500 mt-4">No results found. Try a different location.</p>
+            <p className="text-gray-500 mt-4">No results found. Try a different search.</p>
           )}
         </div>
       </div>
@@ -99,3 +130,4 @@ export default function Home() {
     </>
   );
 }
+

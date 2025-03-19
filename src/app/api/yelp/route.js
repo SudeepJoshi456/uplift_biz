@@ -4,13 +4,14 @@ export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const location = searchParams.get("location");
+    const term = searchParams.get("term") || ""; 
 
     if (!location) {
       return NextResponse.json({ error: "Location is required" }, { status: 400 });
     }
 
     const YELP_API_KEY = process.env.NEXT_PUBLIC_YELP_API_KEY;
-    const YELP_API_URL = `https://api.yelp.com/v3/businesses/search?location=${location}&categories=blackowned`;
+    const YELP_API_URL = `https://api.yelp.com/v3/businesses/search?location=${location}&term=${term}&categories=blackowned`;
 
     const response = await fetch(YELP_API_URL, {
       headers: {
