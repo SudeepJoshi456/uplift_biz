@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-700 px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-gray-700">
         <h1 className="text-4xl font-bold text-white mt-10 text-center">
           Find Local Black & Minority-Owned Businesses
         </h1>
@@ -109,7 +109,7 @@ export default function Home() {
             <p className="text-gray-500">Loading results...</p>
           ) : results.length > 0 ? (
             <div className="bg-gray-800/90 backdrop-blur-md rounded-md p-4 shadow-lg max-h-[500px] overflow-y-auto">
-              {results.slice(0, 5).map((biz) => ( // Show only 5 results at a time
+              {results.map((biz) => ( // Show only 5 results at a time
                 <li
                   key={biz.id}
                   className="p-4 border-b border-gray-700 last:border-none flex gap-4 hover:bg-gray-700/50 transition-colors duration-300"
@@ -138,6 +138,7 @@ export default function Home() {
                     <p className="text-sm text-gray-400">
                       ⭐ {biz.rating} ({biz.review_count} reviews)
                     </p>
+                    <p className="text-gray-700">{biz.description || "No description available."}</p>
                   </div>
 
                   {/* Get Directions Button */}
