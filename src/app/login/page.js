@@ -7,6 +7,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import Link from 'next/link'
 import { FcGoogle } from 'react-icons/fc'
 import { FaFacebookF, FaApple } from 'react-icons/fa'
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -24,6 +26,8 @@ export default function Login() {
   }
 
   return (
+     <>
+                <Navbar/>
     <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fddede' }}>
       <div className="rounded-2xl shadow-xl flex max-w-4xl p-6" style={{ backgroundColor: '#fff5f7' }}>
         {/* Left Section */}
@@ -55,7 +59,7 @@ export default function Login() {
             className="border w-full p-2 mb-3 rounded text-black placeholder-gray-500"
           />
 
-          <button onClick={handleLogin} className="bg-pink-400 text-white px-4 py-2 rounded w-full">Login</button>
+      <button onClick={handleLogin} className="text-white px-4 py-2 rounded w-full" style={{ backgroundColor: "#520606" }}>Login</button>
 
           <div className="flex items-center my-4">
             <div className="flex-grow h-px bg-gray-300" />
@@ -69,10 +73,12 @@ export default function Login() {
 
           <p className="text-center text-sm text-black">
             Don't have an account?{' '}
-            <Link href="/signup" className="text-pink-600 underline">Sign up here</Link>
-          </p>
+            <Link href="/signup" className="underline" style={{ color: "#520606" }}>Sign up here</Link>
+            </p>
         </div>
       </div>
     </div>
+      <Footer/>
+            </>
   )
 }

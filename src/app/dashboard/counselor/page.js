@@ -1,10 +1,13 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const Counselor = () => {
   const router = useRouter();
@@ -54,7 +57,7 @@ const Counselor = () => {
         User's Current Question: ${query}
 
         Provide helpful advice and guidance for growing and managing the business. Feel free to ask follow-up questions.
-        Keep the response concise.
+        Keep the response concise. This business is black-owned.
       `;
 
       // Make sure that the prompt is passed as an object with a key "prompt"
@@ -92,42 +95,52 @@ const Counselor = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">AI Business Counselor</h1>
+        <>
+        <Navbar/>
 
-      <div className="space-y-4">
-        {/* Render conversation history */}
-        <div className="space-y-2">
-          {conversation.map((entry, index) => (
-            <div key={index} className="bg-gray-100 p-3 rounded-md">
-              <div className="font-semibold">Q{index + 1}: {entry.question}</div>
-              <div className="mt-1">
-                <strong>A{index + 1}:</strong>
-                <div className="prose mt-2">
-                  <ReactMarkdown>{entry.response}</ReactMarkdown>
+    <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: '#fddede' }}>
+      <div className="rounded-2xl shadow-xl flex flex-col max-w-4xl w-full p-6 gap-6" style={{ backgroundColor: '#fff5f7' }}>
+        <h1 className="text-3xl font-bold text-center text-black mb-4">AI Business Counselor</h1>
+
+        <div className="flex flex-col gap-4">
+          {/* Render conversation history */}
+          <div className="space-y-4 max-h-[400px] overflow-y-auto p-4 bg-white rounded-xl shadow">
+            {conversation.map((entry, index) => (
+              <div
+                key={index}
+                className={`p-3 rounded-md ${index % 2 === 0 ? 'bg-gray-100' : 'bg-pink-100'}`}
+              >
+                <div className="font-semibold">Q{index + 1}: {entry.question}</div>
+                <div className="mt-1">
+                  <strong>A{index + 1}:</strong>
+                  <div className="prose mt-2 text-black">
+                    <ReactMarkdown>{entry.response}</ReactMarkdown>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Input section for new questions */}
+          <textarea
+            className="w-full p-3 border rounded-md mb-4 text-black"
+            placeholder="Ask a business-related question..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <button
+            onClick={handleAsk}
+            disabled={loading || !query.trim()}
+            className="bg-[#520606] text-white px-6 py-2 rounded-lg w-full"
+          >
+            {loading ? 'Thinking...' : 'Ask'}
+          </button>
         </div>
-
-        {/* Input section for new questions */}
-        <textarea
-          className="w-full p-3 border rounded mb-3"
-          placeholder="Ask a business-related question..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-
-        <button
-          onClick={handleAsk}
-          disabled={loading || !query.trim()}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          {loading ? 'Thinking...' : 'Ask'}
-        </button>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 
