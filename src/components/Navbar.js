@@ -10,7 +10,7 @@ export default function Navbar() {
         </h1>
         <div className="space-x-6 flex items-center">
           <Link
-            href="/"
+            href="/home"
             className="text-gray-300 hover:text-white transition-colors duration-300 transform hover:scale-110"
           >
             Home
