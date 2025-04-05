@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 export default function LandingPage() {
   const router = useRouter()
   useEffect(() => {
-    router.push('/signup')
+    router.push('/home')
   }, [router])
 
   return null

@@ -11,17 +11,13 @@ import { FaFacebookF, FaApple } from 'react-icons/fa'
 export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState('user')
+  const [role, setRole] = useState('business')
   const router = useRouter()
 
   const handleSignup = async () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)
-      if (role === 'user') {
-        router.push('/home')
-      } else {
-        router.push('/register-business')
-      }
+      router.push('/register-business')
     } catch (error) {
       console.error(error.message)
     }
@@ -39,10 +35,10 @@ export default function Signup() {
         <div className="w-1/2 p-6">
           <h2 className="text-3xl font-bold mb-4 text-center text-black">Sign Up</h2>
 
-          <div className="flex gap-4 mb-4 justify-center">
+          {/* <div className="flex gap-4 mb-4 justify-center">
             <button onClick={() => setRole('user')} className={`px-4 py-2 rounded-full border text-black ${role === 'user' ? 'bg-gray-300' : ''}`}>User</button>
             <button onClick={() => setRole('business')} className={`px-4 py-2 rounded-full border text-black ${role === 'business' ? 'bg-gray-300' : ''}`}>Business Owner</button>
-          </div>
+          </div> */}
 
           <input
             type="email"
@@ -69,8 +65,6 @@ export default function Signup() {
 
           <div className="flex justify-center gap-4 mb-4">
             <button className="bg-white p-2 rounded-full shadow border"><FcGoogle size={20} /></button>
-            <button className="bg-white p-2 rounded-full shadow border"><FaFacebookF size={20} /></button>
-            <button className="bg-white p-2 rounded-full shadow border"><FaApple size={20} /></button>
           </div>
 
           <p className="text-center text-sm text-black">
