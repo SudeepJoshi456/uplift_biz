@@ -5,10 +5,14 @@ import { Store } from "lucide-react";
 import { useState, useEffect } from "react";
 import { auth } from "@/firebase/firebase"; // Import your Firebase auth instance
 import { signOut } from "firebase/auth"; // Import signOut function from Firebase
+import { useRouter } from 'next/navigation'
+
+
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const router = useRouter();
+  
   useEffect(() => {
     // Check if the user is logged in when the component mounts
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -26,6 +30,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await signOut(auth); // Sign out the user
+      router.push('/home')
       setIsLoggedIn(false); // Update the state
     } catch (error) {
       console.error("Error logging out:", error);
