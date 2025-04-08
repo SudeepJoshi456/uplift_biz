@@ -110,9 +110,9 @@ const Counselor = () => {
                 key={index}
                 className={`p-3 rounded-md ${index % 2 === 0 ? 'bg-gray-100' : 'bg-pink-100'}`}
               >
-                <div className="font-semibold">Q{index + 1}: {entry.question}</div>
+                <div className="font-semibold text-black">Question {index + 1}: {entry.question}</div>
                 <div className="mt-1">
-                  <strong>A{index + 1}:</strong>
+                  <strong className="text-black">Answer {index + 1}:</strong>
                   <div className="prose mt-2 text-black">
                     <ReactMarkdown>{entry.response}</ReactMarkdown>
                   </div>

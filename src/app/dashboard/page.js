@@ -104,6 +104,14 @@ const Dashboard = () => {
               className="w-full border p-2 rounded mb-3 text-black"
               placeholder="Description"
             ></textarea>
+            <input
+              type="text"
+              name="image"
+              value={form.image}
+              onChange={handleChange}
+              className="w-full border p-2 rounded mb-3 text-black"
+              placeholder="Image URL (optional)"
+            />
             <button
               onClick={handleUpdate}
               className="text-white py-2 px-4 rounded w-full mb-2"
@@ -119,7 +127,12 @@ const Dashboard = () => {
             </button>
           </>
         ) : (
-          <>
+        <div className="bg-white p-4 shadow text-center h-full flex flex-col justify-between">
+            <img 
+            src={businessDetails.image}
+            alt="business-img" 
+            className="w-full object-cover h-48 rounded-t-xl mb-4" 
+            />
             <p className="text-lg text-black mb-2">Category: {businessDetails.category}</p>
             <p className="text-lg text-black mb-2">Location: {businessDetails.location}</p>
             <p className="text-lg text-black mb-4">Description: {businessDetails.description}</p>
@@ -130,7 +143,8 @@ const Dashboard = () => {
             >
               Edit Business Details
             </button>
-          </>
+        </div>
+        
         )}
       </div>
 
