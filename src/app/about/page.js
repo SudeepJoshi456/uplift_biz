@@ -80,7 +80,7 @@ export default function About() {
               For inquiries or support, reach us at{" "}
               <a
                 href="mailto:support@upliftbiz.com"
-                className="text-[#fff5f7] font-semibold hover:underline"
+                className="text-gray-800 font-semibold hover:underline"
               >
                 support@upliftbiz.com
               </a>
